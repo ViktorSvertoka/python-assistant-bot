@@ -2,7 +2,10 @@
 
 ## Start bot command: hi_lana
 
-### Для запуску бота треба встановити наступні пакети `pip install setuptools` & `pip install -e .`
+### To run the bot, please install the following packages:
+
+1. `pip install setuptools`
+2. `pip install -e .`
 
 ### Now commands:
 
