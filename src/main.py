@@ -1,6 +1,6 @@
-from address_book import AddressBook
-from record import Record
-from storage import save_data, load_data
+from src.models.address_book import AddressBook
+from src.models.record import Record
+from src.utils.storage import save_data, load_data
 
 not_found_message = "Contact does not exist, you can add it"
 
