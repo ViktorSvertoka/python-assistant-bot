@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from collections import UserDict
-from constants import DATE_FORMAT
+from src.utils.constants import DATE_FORMAT
 
 
 def is_weekend_day(day: int) -> bool:
