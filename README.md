@@ -16,18 +16,18 @@
 
 ## We use the following types of commits:
 
-- Feat(HTML) Added new functionality
+- Feat(PY) Added new functionality
 
-- Fix(JS) Error correction
+- Fix(PY) Error correction
 
-- Perf(JPEG) Changes to improve performance
+- Perf(PY) Changes to improve performance
 
-- Refactor(PNG) Code edits without fixing bugs or adding new features
+- Refactor(PY) Code edits without fixing bugs or adding new features
 
-- Revert(JS) Rollback to previous commits
+- Revert(PY) Rollback to previous commits
 
-- Style(SCSS) Code style edits
+- Style(PY) Code style edits
 
-- Docs(README) Documentation update
+- Docs(MD) Documentation update
 
 Choose from the list the description of the commit that fits your task, in brackets we write the file in which we worked, and in the body of the commit we write what we did (changed) etc.
