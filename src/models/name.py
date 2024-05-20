@@ -1,4 +1,4 @@
-from field import Field
+from models.field import Field
 
 
 class Name(Field):

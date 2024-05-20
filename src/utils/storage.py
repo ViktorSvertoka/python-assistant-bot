@@ -1,6 +1,6 @@
 import pickle
 
-from src.models.address_book import AddressBook
+from models.address_book import AddressBook
 
 FILE_PKL = "addressbook.pkl"
 

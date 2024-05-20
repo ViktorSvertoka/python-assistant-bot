@@ -1,6 +1,6 @@
 from datetime import datetime
-from field import Field
-from src.utils.constants import DATE_FORMAT
+from models.field import Field
+from utils.constants import DATE_FORMAT
 
 
 class Birthday(Field):
