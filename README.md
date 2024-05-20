@@ -1,6 +1,8 @@
 # Personal Assistant Bot Lana
 
-## Start bot command - python3 src/main.py
+## Start bot command: hi_lana
+
+### Для запуску бота треба встановити наступні пакети `pip install setuptools` & `pip install -e .`
 
 ### Now commands:
 
