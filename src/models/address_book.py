@@ -1,7 +1,12 @@
 from datetime import datetime, timedelta
 from collections import UserDict
-from utils.constants import DATE_FORMAT
+import sys
+import os
 
+# Додаємо шлях до кореневої директорії проекту
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from utils.constants import DATE_FORMAT
 
 def is_weekend_day(day: int) -> bool:
     return day > 4
@@ -18,8 +23,11 @@ class AddressBook(UserDict):
             raise KeyError(f"Record with name '{record.name.value}' already exists.")
         self.data[record.name.value] = record
 
-    def find(self, name: str):
-        return self.data.get(name)
+    def find(self, value: str):
+        for name, record in self.data.items():
+            if value == name or value == record.email.value:
+                return record
+        return "Contact not found."
 
     def delete(self, name):
         del self.data[name]
