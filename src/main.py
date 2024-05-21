@@ -52,6 +52,13 @@ def show_phone(args, book: AddressBook):
         return not_found_message
     return record
 
+@input_error
+def find_contact(args, book: AddressBook):
+    if len(args) < 1:
+        raise InputError("Contact name/email is missing.")
+    
+    value = args[0]
+    return book.find(value)
 
 @input_error
 def add_birthday(args, book: AddressBook):
@@ -150,6 +157,8 @@ def main():
                 print(add_email(args, book))
             case "show-email":
                 print(show_email(args, book))
+            case "find-contact":
+                print(find_contact(args, book))    
             case _:
                 print("Invalid command.")
 

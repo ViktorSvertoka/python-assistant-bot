@@ -50,9 +50,9 @@ Contact name: {self.name.value}
                 "The specified number does not exist or the contact has no phone numbers."
             )
 
-    def find_phone(self, number):
-        for phone in self.phones:
-            if phone.value == number:
+    def find_phone(self, phone):
+        for p in self.phones:
+            if p.value == phone:
                 return phone
 
     def add_birthday(self, date):
