@@ -17,7 +17,7 @@ class Record:
         emails_str = 'Emails: ' + \
             '; '.join(
                 e.value for e in self.emails) if self.emails else ""
-        birthday_str = f", Birthday: {
+        birthday_str = f"Birthday: {
             self.birthday.value}" if self.birthday else ""
         phones_str = 'Phones: ' + ''.join(p.value for p in self.phones)
         contact_info = f'''
