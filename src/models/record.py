@@ -1,6 +1,7 @@
 from models.phone import Phone
 from models.name import Name
 from models.birthday import Birthday
+from models.email import Email
 
 
 class Record:
@@ -8,13 +9,25 @@ class Record:
     def __init__(self, name):
         self.name = Name(name)
         self.phones = []
+        self.emails = []
         self.birthday = None
 
     def __str__(self):
-        contact_info = f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
-
-        if self.birthday:
-            contact_info += f", birthday: {self.birthday}"
+        divider_str = '*' * 20
+        emails_str = 'Emails: ' + \
+            '; '.join(
+                e.value for e in self.emails) if self.emails else ""
+        birthday_str = f", Birthday: {
+            self.birthday.value}" if self.birthday else ""
+        phones_str = 'Phones: ' + ''.join(p.value for p in self.phones)
+        contact_info = f'''
+        {divider_str}
+        Contact name: {self.name.value};
+        {phones_str};
+        {emails_str};
+        {birthday_str}
+        {divider_str}
+        '''
 
         return contact_info
 
@@ -45,3 +58,17 @@ class Record:
 
     def add_birthday(self, date):
         self.birthday = Birthday(date)
+
+    def add_email(self, email):
+        self.emails.append(Email(email))
+
+    def delete_email(self, email):
+        found_email = False
+        for e in self.emails:
+            if e.value == email:
+                found_email = True
+                email_to_delete = e
+        if found_email:
+            self.emails.remove(email_to_delete)
+        else:
+            raise "The specified email does not exist or the contact has no email addresses."
