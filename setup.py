@@ -9,6 +9,6 @@ setup(
     license="MIT",
     packages=find_namespace_packages(where="src"),
     package_dir={"": "src"},
-    install_requires=[],
+    install_requires=["colorama"],
     entry_points={"console_scripts": ["hi_lana=main:main"]},
 )

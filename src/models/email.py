@@ -1,5 +1,6 @@
 import re
 from models.field import Field
+from utils.colorizer import Colorizer
 
 
 class Email(Field):
@@ -7,7 +8,8 @@ class Email(Field):
         if self.validate_email(value):
             self.value = value
         else:
-            raise ValueError("Invalid email. Please provide a correct email address")
+            raise ValueError(
+                Colorizer.error("Invalid email. Please provide a correct email address"))
 
     def validate_email(self, email):
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
