@@ -4,7 +4,9 @@ import rlcompleter
 
 from models.address_book import AddressBook
 from models.record import Record
+from models.notes import Notes
 from utils.storage import save_data, load_data
+from utils.storage_notes import save_notes, load_notes
 from utils.colorizer import Colorizer
 
 not_found_message = "Contact does not exist, you can add it"
@@ -211,7 +213,56 @@ def show_email(args, book: AddressBook):
         return 'Emails not added to this contact.' + "\n" + give_tip()
     return 'Emails not added to this contact.'
 
+
+
+
+@input_error
+def add_note(notes: Notes):
+    title = input(Colorizer.highlight("Enter a title: "))
+    text = input(Colorizer.highlight("Enter a text: "))
+    tags = input(Colorizer.highlight("Enter tags: "))
+    try:
+        notes.add_note(title, text, tags)
+        return Colorizer.success(f"Note with title: '{title}' successfully added.")
+    except ValueError as e:
+        return Colorizer.error(str(e))
+
+
+
+
+
+@input_error
+def delete_note(notes: Notes):
+    title = input(Colorizer.highlight("Enter a title: "))
+    notes.delete_note(title)
+    if notes.find_note_by_title(title):
+        return Colorizer.error(f"Note with title: '{title}' not found.")
+    else:
+        return Colorizer.success(f"Note with title: '{title}' successfully deleted.")
+
+
+
+
+@input_error
+def edit_note(notes: Notes):
+    title = input(Colorizer.highlight("Enter a title: "))
+    new_content = input(Colorizer.highlight("Enter new content: "))
+    new_tags = input(Colorizer.highlight("Enter new tags: "))
+    
+    note = notes.find_note_by_title(title)
+    
+    if note:
+        if new_content:
+            note.content = new_content
         
+        if new_tags:
+            note.tags = [tag.strip() for tag in new_tags.split(",")]
+        
+        return Colorizer.success(f"Note with title '{title}' successfully edited.")
+    else:
+        return Colorizer.error(f"Note with title '{title}' not found.")
+    
+
 
 
 def parse_input(user_input):
@@ -223,6 +274,7 @@ def parse_input(user_input):
 def main():
     global command_count
     book = load_data()
+    notes = load_notes()
     print(Colorizer.highlight("Hello! I'm Lana, your personal assistant bot. Smile! Today is the best day ever!"))
 
     readline.parse_and_bind("tab: complete")
@@ -241,6 +293,7 @@ def main():
                     print(give_tip())
             case "close" | "exit":
                 save_data(book)
+                save_notes(notes)
                 print("Good bye!")
                 break
             case "add":
@@ -270,7 +323,13 @@ def main():
             case "find-contact":
                 print(find_contact(args, book))    
             case "delete-contact":
-                print(delete_contact(args, book))    
+                print(delete_contact(args, book))
+            case "add-note":
+                print(add_note(notes))
+            case "delete-note":
+                print(delete_note(notes))
+            case "edit-note":
+                print(edit_note(notes)) 
             case _:
                 command_count += 1
                 print("Invalid command.")
