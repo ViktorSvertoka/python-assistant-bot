@@ -76,24 +76,6 @@
 
 Choose from the list the description of the commit that fits your task, in brackets we write the file in which we worked, and in the body of the commit we write what we did (changed) etc.
 
-## We use the following types of commits:
-
-- Feat(PY) Added new functionality
-
-- Fix(PY) Error correction
-
-- Perf(PY) Changes to improve performance
-
-- Refactor(PY) Code edits without fixing bugs or adding new features
-
-- Revert(PY) Rollback to previous commits
-
-- Style(PY) Code style edits
-
-- Docs(MD) Documentation update
-
-Choose from the list the description of the commit that fits your task, in brackets we write the file in which we worked, and in the body of the commit we write what we did (changed) etc.
-
 ## To run the bot, please install the following packages:
 
 1. `pip install setuptools`
