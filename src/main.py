@@ -169,7 +169,7 @@ def show_birthday(args, book: AddressBook):
         return "Birthday not added to this contact." + "\n" + give_tip()
     return "Birthday not added to this contact."
     
-        
+       
 
 
 @input_error
@@ -313,7 +313,9 @@ def main():
                 print(show_birthday(args, book))
             case "birthdays":
                 command_count += 1
-                print(book.get_upcoming_birthdays())
+                days_from_today = int(args[0])
+                upcoming_birthdays = book.get_upcoming_birthdays(days_from_today)
+                print(upcoming_birthdays)
                 if command_count % tip_interval == 0:
                     print(give_tip())
             case "add-email":
