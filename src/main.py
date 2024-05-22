@@ -61,6 +61,16 @@ def find_contact(args, book: AddressBook):
     return book.find(value)
 
 @input_error
+def delete_contact(args, book: AddressBook):
+    name = args[0]
+    if name in book:
+        book.delete(name)
+        return f"Contact '{name}' successfully deleted"
+    else:
+        raise KeyError(f"No contact with the name '{name}' exists")
+    
+
+@input_error
 def add_birthday(args, book: AddressBook):
     if len(args) != 2:
         return "Invalid number of arguments. Usage: add-birthday [name] [date]"
@@ -127,7 +137,7 @@ def parse_input(user_input):
 
 def main():
     book = load_data()
-    print(Colorizer.highlight("Hello! I'm Lana, your personal assistant bot."))
+    print(Colorizer.highlight("Hello! I'm Lana, your personal assistant bot. Smile! Today is the best day ever!"))
     while True:
         user_input = input(Colorizer.info("Enter a command: "))
         command, *args = parse_input(user_input)
@@ -159,6 +169,8 @@ def main():
                 print(show_email(args, book))
             case "find-contact":
                 print(find_contact(args, book))    
+            case "delete-contact":
+                print(delete_contact(args, book))    
             case _:
                 print("Invalid command.")
 

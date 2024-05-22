@@ -54,6 +54,9 @@ Contact name: {self.name.value}
         for p in self.phones:
             if p.value == phone:
                 return phone
+            
+    def delete(self, name):
+        del self.data[name]        
 
     def add_birthday(self, date):
         self.birthday = Birthday(date)
