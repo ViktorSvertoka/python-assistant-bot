@@ -295,6 +295,9 @@ def edit_note(notes: Notes):
         return Colorizer.success(f"Note with title '{title}' successfully edited.")
     else:
         return Colorizer.error(f"Note with title '{title}' not found.")
+    
+
+
 
 
 def parse_input(user_input):
