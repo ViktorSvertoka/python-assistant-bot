@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from collections import UserDict
+from utils.colorizer import Colorizer
 import sys
 import os
 
@@ -7,10 +8,6 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.constants import DATE_FORMAT
-
-def is_weekend_day(day: int) -> bool:
-    return day > 4
-
 
 class AddressBook(UserDict):
 
@@ -32,9 +29,10 @@ class AddressBook(UserDict):
     def delete(self, name):
         del self.data[name]
 
-    def get_upcoming_birthdays(self):
+    def get_upcoming_birthdays(self, days_from_today):
         today_date = datetime.today().date()
         upcoming_birthdays = []
+        divider_str = "*" * 40
 
         for name, record in self.data.items():
             if record.birthday:
@@ -43,20 +41,15 @@ class AddressBook(UserDict):
                 ).date()
                 timedelta_days = (birthday_date - today_date).days
 
-                if 0 <= timedelta_days <= 7:
-                    if is_weekend_day(birthday_date.weekday()):
-                        days_delta = 2 if birthday_date.weekday() == 5 else 1
-                        congratulation_date = birthday_date + timedelta(days=days_delta)
-                    else:
-                        congratulation_date = birthday_date
-
-                    upcoming_birthdays.append(
-                        {
-                            "name": name,
-                            "congratulation_date": congratulation_date.strftime(
-                                DATE_FORMAT
-                            ),
-                        }
-                    )
-
-        return upcoming_birthdays
+                if 0 <= timedelta_days <= days_from_today:
+                    birthday_str = birthday_date.strftime(DATE_FORMAT)
+                    upcoming_birthdays.append(f"""
+{divider_str}
+Name: {name}, 
+Congratulation date: {birthday_str}
+{divider_str}
+""")  
+        if not upcoming_birthdays:
+            return "No upcoming birthdays within the next {} days.".format(days_from_today)
+    
+        return "\n".join(upcoming_birthdays)             
