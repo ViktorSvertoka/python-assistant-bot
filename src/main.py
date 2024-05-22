@@ -1,6 +1,6 @@
 import random
 import readline
-import rlcompleter
+import sys
 
 from models.address_book import AddressBook
 from models.record import Record
@@ -11,17 +11,60 @@ not_found_message = "Contact does not exist, you can add it"
 
 # List of tips
 tips = [
-    "Smile!",
-    "Do 10 squats!",
-    "Hold a plank for a minute!",
-    "Take 5 deep breaths!",
-    "Shake your body for a minute!",
-    "Dance for 5 minute!"
+    "Smile!!!",
+    "Do 10 squats!!!",
+    "Hold a plank for a minute!!!",
+    "Take 5 deep breaths!!!",
+    "Shake your body for a minute!!!",
+    "Dance for 5 minute!!!"
 ]
 
 # Command counter
 command_count = 0
 tip_interval = 5 # tip after every 5 commands
+
+
+commands = [
+    "hello",
+    "exit",
+    "add",
+    "change",
+    "phone",
+    "all",
+    "add-birthday",
+    "show-birthday",
+    "birthdays",
+    "add-email",
+    "show-email",
+    "find-contact",
+    "delete-contact"
+]
+
+def get_contact_names(book):
+    return [record.name.value for record in book.data.values()]
+
+
+def completer(text, state):
+    buffer = readline.get_line_buffer().split()
+    if len(buffer) == 0:
+        options = commands[:]
+    else:
+        cmd = buffer[0]
+        if cmd == 'find-contact' and len(buffer) == 2:
+            contact_names = get_contact_names(book)
+            options = [name for name in contact_names if name.startswith(text)]
+        else:
+            options = [command for command in commands if command.startswith(text)]
+    
+    if state < len(options):
+        return options[state]
+    else:
+        return None
+    
+readline.set_completer(completer)
+readline.parse_and_bind("tab: complete")    
+
+
 
 
 def input_error(func):
@@ -222,12 +265,9 @@ def parse_input(user_input):
 
 def main():
     global command_count
+    global book
     book = load_data()
     print(Colorizer.highlight("Hello! I'm Lana, your personal assistant bot. Smile! Today is the best day ever!"))
-
-    readline.parse_and_bind("tab: complete")
-    readline.set_completer(complete)
-    
     
     while True:
         user_input = input(Colorizer.info("Enter a command: "))
