@@ -2,11 +2,6 @@
 
 ## Start bot command: hi_lana
 
-## To run the bot, please install the following packages:
-
-1. `pip install setuptools`
-2. `pip install -e .`
-
 ## 📴 Commands list:
 
 ### 🙍 Manage by Contacts
@@ -98,3 +93,10 @@ Choose from the list the description of the commit that fits your task, in brack
 - Docs(MD) Documentation update
 
 Choose from the list the description of the commit that fits your task, in brackets we write the file in which we worked, and in the body of the commit we write what we did (changed) etc.
+
+## To run the bot, please install the following packages:
+
+1. `pip install setuptools`
+2. `pip install prompt_toolkit`
+3. `pip install colorama`
+4. `pip install -e .`
