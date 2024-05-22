@@ -1,4 +1,6 @@
 import random
+import readline
+import rlcompleter
 
 from models.address_book import AddressBook
 from models.record import Record
@@ -31,8 +33,12 @@ def input_error(func):
     return inner
 
 def give_tip():
-    return Colorizer.info(random.choice(tips))
+    return Colorizer.warn(random.choice(tips))
 
+def complete(text, state):
+    contacts = [record.name.value for record in book.data.values()]
+    matches = [c for c in contacts if c.startswith(text)]
+    return matches[state] if state < len(matches) else None
 
 @input_error
 def add_contact(args, book: AddressBook):
@@ -174,7 +180,7 @@ def add_email(args, book: AddressBook):
     name, email = args
     record = book.find(name)
     if not isinstance(record, Record):
-        return not_found_message
+        return "Contact not found."
     if email in [e.value for e in record.emails]:
         return Colorizer.error("Email already exists for this contact.")
     record.add_email(email)
@@ -218,6 +224,11 @@ def main():
     global command_count
     book = load_data()
     print(Colorizer.highlight("Hello! I'm Lana, your personal assistant bot. Smile! Today is the best day ever!"))
+
+    readline.parse_and_bind("tab: complete")
+    readline.set_completer(complete)
+    
+    
     while True:
         user_input = input(Colorizer.info("Enter a command: "))
         command, *args = parse_input(user_input)

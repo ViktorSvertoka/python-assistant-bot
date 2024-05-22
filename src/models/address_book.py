@@ -25,7 +25,7 @@ class AddressBook(UserDict):
 
     def find(self, value: str):
         for name, record in self.data.items():
-            if value == name or value == record.email.value:
+            if value == name or any(value == email.value for email in record.emails):
                 return record
         return "Contact not found."
 
