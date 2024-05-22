@@ -1,6 +1,6 @@
 import random
-import readline
-import sys
+from prompt_toolkit import PromptSession
+from prompt_toolkit.completion import Completer, Completion, WordCompleter
 
 from models.address_book import AddressBook
 from models.record import Record
@@ -23,7 +23,7 @@ tips = [
 
 # Command counter
 command_count = 0
-tip_interval = 5 # tip after every 5 commands
+tip_interval = 5  # tip after every 5 commands
 
 
 commands = [
@@ -42,31 +42,31 @@ commands = [
     "delete-contact"
 ]
 
+
 def get_contact_names(book):
     return [record.name.value for record in book.data.values()]
 
 
-def completer(text, state):
-    buffer = readline.get_line_buffer().split()
-    if len(buffer) == 0:
-        options = commands[:]
-    else:
-        cmd = buffer[0]
-        if cmd == 'find-contact' and len(buffer) == 2:
-            contact_names = get_contact_names(book)
-            options = [name for name in contact_names if name.startswith(text)]
+class CommandCompleter(Completer):
+    def get_completions(self, document, complete_event):
+        text = document.text_before_cursor
+        buffer = text.split()
+
+        if not buffer:  # If buffer is empty
+            options = commands[:]  # Show all commands
         else:
-            options = [command for command in commands if command.startswith(text)]
-    
-    if state < len(options):
-        return options[state]
-    else:
-        return None
-    
-readline.set_completer(completer)
-readline.parse_and_bind("tab: complete")    
+            cmd = buffer[0]  # Get the command typed so far
+            if cmd == 'find-contact' and len(buffer) == 2:
+                contact_names = get_contact_names(book)
+                options = [
+                    name for name in contact_names if name.startswith(buffer[1])]
+            else:
+                # Show commands that start with the typed text
+                options = [
+                    command for command in commands if command.startswith(cmd)]
 
-
+        for option in options:
+            yield Completion(option, start_position=-len(buffer[-1]))
 
 
 def input_error(func):
@@ -77,13 +77,16 @@ def input_error(func):
             return str(error)
     return inner
 
+
 def give_tip():
     return Colorizer.warn(random.choice(tips))
+
 
 def complete(text, state):
     contacts = [record.name.value for record in book.data.values()]
     matches = [c for c in contacts if c.startswith(text)]
     return matches[state] if state < len(matches) else None
+
 
 @input_error
 def add_contact(args, book: AddressBook):
@@ -125,7 +128,6 @@ def change_contact(args, book: AddressBook):
         if command_count % tip_interval == 0:
             return Colorizer.success("Phone changed") + "\n" + give_tip()
         return Colorizer.success("Phone changed")
-            
 
 
 @input_error
@@ -143,6 +145,7 @@ def show_phone(args, book: AddressBook):
         return str(record) + "\n" + give_tip()
     return record
 
+
 @input_error
 def find_contact(args, book: AddressBook):
     global command_count
@@ -150,11 +153,12 @@ def find_contact(args, book: AddressBook):
 
     if len(args) < 1:
         raise InputError("Contact name/email is missing.")
-    
+
     value = args[0]
     if command_count % tip_interval == 0:
         return str(book.find(value)) + "\n" + give_tip()
     return book.find(value)
+
 
 @input_error
 def delete_contact(args, book: AddressBook):
@@ -172,7 +176,7 @@ def delete_contact(args, book: AddressBook):
         return f"Contact '{name}' successfully deleted"
     else:
         raise KeyError(f"No contact with the name '{name}' exists")
-    
+
 
 @input_error
 def add_birthday(args, book: AddressBook):
@@ -189,8 +193,6 @@ def add_birthday(args, book: AddressBook):
     if command_count % tip_interval == 0:
         return "Birthday added." + "\n" + give_tip()
     return "Birthday added."
-    
-        
 
 
 @input_error
@@ -205,14 +207,12 @@ def show_birthday(args, book: AddressBook):
     if not isinstance(record, Record):
         return not_found_message
     if record.birthday:
-            if command_count % tip_interval == 0:
-                return record.birthday + "\n" + give_tip()
-            return record.birthday
+        if command_count % tip_interval == 0:
+            return record.birthday + "\n" + give_tip()
+        return record.birthday
     if command_count % tip_interval == 0:
         return "Birthday not added to this contact." + "\n" + give_tip()
     return "Birthday not added to this contact."
-    
-       
 
 
 @input_error
@@ -232,8 +232,6 @@ def add_email(args, book: AddressBook):
     if command_count % tip_interval == 0:
         return Colorizer.success("Email added.") + "\n" + give_tip()
     return Colorizer.success("Email added.")
-    
-       
 
 
 @input_error
@@ -257,8 +255,6 @@ def show_email(args, book: AddressBook):
     return 'Emails not added to this contact.'
 
 
-
-
 @input_error
 def add_note(notes: Notes):
     title = input(Colorizer.highlight("Enter a title: "))
@@ -271,9 +267,6 @@ def add_note(notes: Notes):
         return Colorizer.error(str(e))
 
 
-
-
-
 @input_error
 def delete_note(notes: Notes):
     title = input(Colorizer.highlight("Enter a title: "))
@@ -284,28 +277,24 @@ def delete_note(notes: Notes):
         return Colorizer.success(f"Note with title: '{title}' successfully deleted.")
 
 
-
-
 @input_error
 def edit_note(notes: Notes):
     title = input(Colorizer.highlight("Enter a title: "))
     new_content = input(Colorizer.highlight("Enter new content: "))
     new_tags = input(Colorizer.highlight("Enter new tags: "))
-    
+
     note = notes.find_note_by_title(title)
-    
+
     if note:
         if new_content:
             note.content = new_content
-        
+
         if new_tags:
             note.tags = [tag.strip() for tag in new_tags.split(",")]
-        
+
         return Colorizer.success(f"Note with title '{title}' successfully edited.")
     else:
         return Colorizer.error(f"Note with title '{title}' not found.")
-    
-
 
 
 def parse_input(user_input):
@@ -319,10 +308,14 @@ def main():
     global book
     book = load_data()
     notes = load_notes()
-    print(Colorizer.highlight("Hello! I'm Lana, your personal assistant bot. Smile! Today is the best day ever!"))
-    
+    session = PromptSession()
+    completer = CommandCompleter()
+    print(Colorizer.highlight(
+        "Hello! I'm Lana, your personal assistant bot. Smile! Today is the best day ever!"))
+
     while True:
-        user_input = input(Colorizer.info("Enter a command: "))
+        user_input = session.prompt(
+            "Enter a command: ", completer=completer)
         command, *args = parse_input(user_input)
 
         match command:
@@ -354,7 +347,8 @@ def main():
             case "birthdays":
                 command_count += 1
                 days_from_today = int(args[0])
-                upcoming_birthdays = book.get_upcoming_birthdays(days_from_today)
+                upcoming_birthdays = book.get_upcoming_birthdays(
+                    days_from_today)
                 print(upcoming_birthdays)
                 if command_count % tip_interval == 0:
                     print(give_tip())
@@ -363,7 +357,7 @@ def main():
             case "show-email":
                 print(show_email(args, book))
             case "find-contact":
-                print(find_contact(args, book))    
+                print(find_contact(args, book))
             case "delete-contact":
                 print(delete_contact(args, book))
             case "add-note":
@@ -371,7 +365,7 @@ def main():
             case "delete-note":
                 print(delete_note(notes))
             case "edit-note":
-                print(edit_note(notes)) 
+                print(edit_note(notes))
             case _:
                 command_count += 1
                 print("Invalid command.")
