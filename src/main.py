@@ -322,6 +322,32 @@ def edit_note(notes: Notes):
     
 
 
+@input_error
+def find_note_by_title(notes: Notes):
+    title = input(Colorizer.highlight("Enter the title to search for: "))
+    note = notes.find_note_by_title(title)
+    if note:
+        return note
+    else:
+        return Colorizer.error(f"Note with title '{title}' not found.")
+    
+
+
+@input_error
+def find_note_by_tag(notes: Notes):
+    tag = input(Colorizer.highlight("Enter the tag to search for: "))
+    notes_with_tag = notes.find_note_by_tag(tag)
+    if notes_with_tag:
+        return "\n".join(str(note) for note in notes_with_tag)
+    else:
+        return Colorizer.error(f"No notes found with tag '{tag}'.")
+    
+
+
+@input_error
+def show_all_notes(notes: Notes):
+    return notes.show_all_notes()
+    
 
 
 def parse_input(user_input):
@@ -393,6 +419,12 @@ def main():
                 print(delete_note(notes))
             case "edit-note":
                 print(edit_note(notes))
+            case "find-note-by-title":
+                print(find_note_by_title(notes))
+            case "find-note-by-tag":
+                print(find_note_by_tag(notes))
+            case "show-all-notes":
+                print(show_all_notes(notes))
             case _:
                 command_count += 1
                 print("Invalid command.")
