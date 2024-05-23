@@ -1,3 +1,4 @@
+from utils.constants import DATE_FORMAT
 from datetime import datetime, timedelta
 from collections import UserDict
 from utils.colorizer import Colorizer
@@ -7,7 +8,6 @@ import os
 # Додаємо шлях до кореневої директорії проекту
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.constants import DATE_FORMAT
 
 class AddressBook(UserDict):
 
@@ -17,7 +17,8 @@ class AddressBook(UserDict):
 
     def add_record(self, record):
         if record.name.value in self.data:
-            raise KeyError(f"Record with name '{record.name.value}' already exists.")
+            raise KeyError(f"Record with name '{
+                           record.name.value}' already exists.")
         self.data[record.name.value] = record
 
     def find(self, value: str):
@@ -26,7 +27,7 @@ class AddressBook(UserDict):
                 return record
         return "Contact not found."
 
-    def delete(self, name):
+    def delete_contact(self, name):
         del self.data[name]
 
     def get_upcoming_birthdays(self, days_from_today):
@@ -45,11 +46,11 @@ class AddressBook(UserDict):
                     birthday_str = birthday_date.strftime(DATE_FORMAT)
                     upcoming_birthdays.append(f"""
 {divider_str}
-Name: {name}, 
+Name: {name},
 Congratulation date: {birthday_str}
 {divider_str}
-""")  
+""")
         if not upcoming_birthdays:
             return "No upcoming birthdays within the next {} days.".format(days_from_today)
-    
-        return "\n".join(upcoming_birthdays)             
+
+        return "\n".join(upcoming_birthdays)
