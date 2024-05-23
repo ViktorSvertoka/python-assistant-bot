@@ -117,17 +117,41 @@ def change_contact(args, book: AddressBook):
     global command_count
     command_count += 1
 
-    if len(args) != 3:
-        return Colorizer.error("Invalid number of arguments. Usage: change [name] [old_number] [new_number]")
-    name, old_number, new_number = args
+    if len(args) != 4:
+        return Colorizer.error("Invalid number of arguments. Usage: change [name] [field] [old_value] [new_value]")
+    
+    name, field, old_value, new_value = args
     record = book.find(name)
     if not isinstance(record, Record):
         return not_found_message
+    
+    field = field.lower()
+    if field == "phone":
+        try:
+            record.edit_phone(old_value, new_value)
+        except ValueError as e:
+            return Colorizer.error(str(e))
+    elif field == "email":
+        try:
+            record.edit_email(old_value, new_value)
+        except ValueError as e:
+            return Colorizer.error(str(e))
+    elif field == "name":
+        try:
+            record.change_name(new_value)
+        except ValueError as e:
+            return Colorizer.error(str(e))
+    elif field == "birthday":
+        try:
+            record.add_birthday(new_value)
+        except ValueError as e:
+            return Colorizer.error(str(e))
     else:
-        record.edit_phone(old_number, new_number)
-        if command_count % tip_interval == 0:
-            return Colorizer.success("Phone changed") + "\n" + give_tip()
-        return Colorizer.success("Phone changed")
+        return Colorizer.error(f"Field '{field}' is not supported. Use 'phone', 'email', 'name', or 'birthday'.")
+                   
+    if command_count % tip_interval == 0:
+        return Colorizer.success(f"{field.capitalize()} changed") + "\n" + give_tip()
+    return Colorizer.success(f"{field.capitalize()} changed")
 
 
 @input_error

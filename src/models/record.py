@@ -49,6 +49,13 @@ Contact name: {self.name.value}
             raise KeyError(
                 "The specified number does not exist or the contact has no phone numbers."
             )
+        
+    def edit_email(self, old_email, new_email):
+        for email in self.emails:
+            if email.value == old_email:
+                email.value = new_email
+                return
+        raise ValueError(f"Email '{old_email}' not found in contact.")        
 
     def find_phone(self, phone):
         for p in self.phones:
@@ -78,3 +85,5 @@ Contact name: {self.name.value}
             raise ValueError(
                 "The specified email does not exist or the contact has no email addresses."
             )
+    def change_name(self, new_name):
+        self.name = Name(new_name)
