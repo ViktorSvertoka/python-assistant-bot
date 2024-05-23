@@ -46,12 +46,12 @@ commands = [
     "add-address",
     "show-address",
     "delete-address",
-    "add_note",
-    "change_note",
-    "show_all_notes",
-    "delete_note",
-    "find_note_by_title",
-    "find_note_by_tag"
+    "add-note",
+    "edit-note",
+    "delete-note",
+    "find-note-by-title",
+    "find-note-by-tag",
+    "show-all-notes"
 ]
 
 
@@ -392,8 +392,11 @@ def show_address(args, book: AddressBook):
 @input_error
 def add_note(notes: Notes):
     title = input(Colorizer.highlight("Enter a title: "))
+
+    if notes.find_note_by_title(title):
+        return Colorizer.error(f"Note with title '{title}' already exists.")
     text = input(Colorizer.highlight("Enter a text: "))
-    tags = input(Colorizer.highlight("Enter tags: "))
+    tags = input(Colorizer.highlight("Enter tags (comma separated): "))
     try:
         notes.add_note(title, text, tags)
         return Colorizer.success(f"Note with title: '{title}' successfully added.")
