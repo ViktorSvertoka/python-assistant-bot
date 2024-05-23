@@ -46,12 +46,14 @@
 
 ### 🗒️ Manage by Notes
 
-| Command      | Arguments | Description |
-| ------------ | --------- | ----------- |
-| add-note     |           |             |
-| show-notes   |           |             |
-| change-notes |           |             |
-| delete-notes |           |             |
+| Command            | Arguments                          | Description                                              |
+| ------------------ | ---------------------------------- | -------------------------------------------------------- |
+| add-note           | [title], [content], [tags]         | Add a new note with a title, content, and optional tags. |
+| delete-note        | [title]                            | Delete a note by its title.                              |
+| edit-note          | [title], [new_content], [new_tags] | Edit a note's content and/or tags by its title.          |
+| find-note-by-title | [title]                            | Find a note by its title.                                |
+| find-note-by-tag   | [tag]                              | Find notes containing a specific tag.                    |
+| show-all-notes     |                                    | Display all notes stored in the system.                  |
 
 ## We use the following types of commits:
 
