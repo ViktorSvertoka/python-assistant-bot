@@ -32,11 +32,10 @@ commands = [
     "close",
     "add-contact",
     "all-contacts",
-    "change-phone",
+    "change-contact",
     "find-contact",
     "delete-contact",
     "show-phone",
-    "change-phone",
     "add-birthday",
     "show-birthday",
     "birthdays",
@@ -46,7 +45,13 @@ commands = [
     "delete-email",
     "add-address",
     "show-address",
-    "delete-address"
+    "delete-address",
+    "add_note",
+    "change_note",
+    "show_all_notes",
+    "delete_note",
+    "find_note_by_title",
+    "find_note_by_tag"
 ]
 
 
@@ -133,7 +138,7 @@ def all_contacts(book: AddressBook):
 
 
 @input_error
-def change_phone(args, book: AddressBook):
+def change_contact(args, book: AddressBook):
     global command_count
     command_count += 1
 
@@ -185,9 +190,15 @@ def show_phone(args, book: AddressBook):
     record = book.find(name)
     if not isinstance(record, Record):
         return not_found_message
-    if command_count % tip_interval == 0:
-        return str(record) + "\n" + give_tip()
-    return record
+    if record.phones:
+        phones_str = (
+            "Phones: " +
+            "; ".join(p.value for p in record.phones)
+        )
+        return phones_str
+
+    else:
+        return Colorizer.error("Phone number not found for this contact.")
 
 
 @input_error
@@ -229,15 +240,15 @@ def add_birthday(args, book: AddressBook):
     command_count += 1
 
     if len(args) != 2:
-        return "Invalid number of arguments. Usage: add-birthday [name] [date]"
+        return Colorizer.error("Invalid number of arguments. Usage: add-birthday [name] [date]")
     name, date = args
     record = book.find(name)
     if not isinstance(record, Record):
         return not_found_message
     record.add_birthday(date)
     if command_count % tip_interval == 0:
-        return "Birthday added." + "\n" + give_tip()
-    return "Birthday added."
+        return Colorizer.success("Birthday added.") + "\n" + give_tip()
+    return Colorizer.success("Birthday added.")
 
 
 @input_error
@@ -246,18 +257,20 @@ def show_birthday(args, book: AddressBook):
     command_count += 1
 
     if len(args) != 1:
-        return "Invalid number of arguments. Usage: show-birthday [name]"
+        return Colorizer.error("Invalid number of arguments. Usage: show-birthday [name]")
     name = args[0]
     record = book.find(name)
     if not isinstance(record, Record):
         return not_found_message
     if record.birthday:
+        smiley = "🎂"
+        formatted_birthday = record.birthday.value.date().strftime("%d.%m.%Y")
         if command_count % tip_interval == 0:
-            return record.birthday + "\n" + give_tip()
-        return record.birthday
+            return f"{smiley} {formatted_birthday}" + "\n" + give_tip()
+        return f"{smiley} {formatted_birthday}"
     if command_count % tip_interval == 0:
-        return "Birthday not added to this contact." + "\n" + give_tip()
-    return "Birthday not added to this contact."
+        return Colorizer.warn("Birthday not added to this contact.") + "\n" + give_tip()
+    return Colorizer.warn("Birthday not added to this contact.")
 
 
 @input_error
@@ -266,13 +279,13 @@ def add_email(args, book: AddressBook):
     command_count += 1
 
     if len(args) != 2:
-        return "Invalid number of arguments. Usage: add-email [name] [email]"
+        return Colorizer.error("Invalid number of arguments. Usage: add-email [name] [email]")
     name, email = args
     record = book.find(name)
     if not isinstance(record, Record):
-        return "Contact not found."
+        return Colorizer.error("Contact not found.")
     if email in [e.value for e in record.emails]:
-        return Colorizer.error("Email already exists for this contact.")
+        return Colorizer.error("Such email already exists for this contact.")
     record.add_email(email)
     if command_count % tip_interval == 0:
         return Colorizer.success("Email added.") + "\n" + give_tip()
@@ -296,8 +309,8 @@ def show_email(args, book: AddressBook):
             return f"Emails: {emails_str}" + "\n" + give_tip()
         return f"Emails: {emails_str}"
     if command_count % tip_interval == 0:
-        return 'Emails not added to this contact.' + "\n" + give_tip()
-    return 'Emails not added to this contact.'
+        return Colorizer.warn('Emails not added to this contact.') + "\n" + give_tip()
+    return Colorizer.warn('Emails not added to this contact.')
 
 
 @input_error
@@ -372,8 +385,8 @@ def show_address(args, book: AddressBook):
             return f"Address: {record.address}" + "\n" + give_tip()
         return f"Address: {record.address}"
     if command_count % tip_interval == 0:
-        return "Address not added to this contact." + "\n" + give_tip()
-    return "Address not added to this contact."
+        return Colorizer.warn("Address not added to this contact.") + "\n" + give_tip()
+    return Colorizer.warn("Address not added to this contact.")
 
 
 @input_error
@@ -435,7 +448,7 @@ def find_note_by_tag(notes: Notes):
     if notes_with_tag:
         return "\n".join(str(note) for note in notes_with_tag)
     else:
-        return Colorizer.error(f"No notes found with tag '{tag}'.")
+        return Colorizer.warn(f"No notes found with tag '{tag}'.")
 
 
 @input_error
@@ -480,12 +493,14 @@ def main():
                 print(add_contact(args, book))
             case "all-contacts":
                 print(all_contacts(book))
+            case "change-contact":
+                print(change_contact(args, book))
+            case "show-phone":
+                print(show_phone(args, book))
             case "find-contact":
                 print(find_contact(args, book))
             case "delete-contact":
                 print(delete_contact(args, book))
-            case "show-phone":
-                print(show_phone(args, book))
             case "add-birthday":
                 print(add_birthday(args, book))
             case "show-birthday":
@@ -514,7 +529,7 @@ def main():
                 print(add_note(notes))
             case "delete-note":
                 print(delete_note(notes))
-            case "edit-note":
+            case "change-note":
                 print(edit_note(notes))
             case "find-note-by-title":
                 print(find_note_by_title(notes))

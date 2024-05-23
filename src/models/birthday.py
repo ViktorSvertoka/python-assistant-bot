@@ -12,4 +12,4 @@ class Birthday(Field):
 
 
 def __str__(self):
-    return f"{self.value.strftime(DATE_FORMAT)}"
+    return self.value.strftime(DATE_FORMAT)

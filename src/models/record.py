@@ -21,7 +21,7 @@ class Record:
             "; ".join(e.value for e in self.emails) if self.emails else ""
         )
         birthday_str = f"Birthday: {
-            self.birthday.value}" if self.birthday else ""
+            self.birthday.value.strftime('%d.%m.%Y')}" if self.birthday else ""
         phones_str = (
             "Phones: " +
             "; ".join(p.value for p in self.phones) if self.phones else ""
