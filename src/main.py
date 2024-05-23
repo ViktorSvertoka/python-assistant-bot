@@ -213,13 +213,14 @@ def delete_contact(args, book: AddressBook):
         return Colorizer.error("Invalid number of arguments. Usage: delete-contact [name]")
 
     name = args[0]
-    if name in book:
-        book.delete_contact(name)
+    record = book.find(name)
+    if record:
+        book.delete(name)
         if command_count % tip_interval == 0:
-            return Colorizer.success(f"Contact '{name}' successfully deleted") + "\n" + give_tip()
-        return Colorizer.success(f"Contact '{name}' successfully deleted")
+            return f"Contact '{name}' successfully deleted" + "\n" + give_tip()
+        return f"Contact '{name}' successfully deleted"
     else:
-        raise KeyError(f"No contact with the name '{name}' exists")
+        return f"No contact with the name '{name}' exists"
 
 
 @input_error
