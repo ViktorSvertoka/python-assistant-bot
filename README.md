@@ -6,48 +6,43 @@
 
 ### 🙍 Manage by Contacts
 
-| Command        | Arguments                  | Description     |
-| -------------- | -------------------------- | --------------- |
-| add-contact    | add-contact [name] [phone] | add new contact |
-| change-contact |                            |                 |
-| show-contact   |                            |                 |
-| find-contact   |                            |                 |
-| delete-contact |                            |                 |
-| all-contact    |                            |                 |
+| Command        | Arguments                                             | Description                                                    |
+| -------------- | ----------------------------------------------------- | -------------------------------------------------------------- |
+| add-contact    | add-contact [name] [phone]                            | add new contact or update existed with additional phone number |
+| all-contact    | all-contact                                           | show all contacts in the Addressbot                            |
+| change-contact | change-contact [name] [field] [old_value] [new_value] | change contact's fields such as PHONE, EMAIL, NAME, BIRTHDAY   |
+| find-contact   | find-contact [name]                                   | show concrete contact's fields                                 |
+| delete-contact | delete-contact [name]                                 | delete concrete contact from the Addressbot                    |
 
 ### ☎️ Manage by Phone
 
-| Command      | Arguments | Description |
-| ------------ | --------- | ----------- |
-| show-phone   |           |
-| change-phone |           |
+| Command    | Arguments         | Description                    |
+| ---------- | ----------------- | ------------------------------ |
+| show-phone | show-phone [name] | show concrete contact's phones |
 
 ### 🎂 Manage by Birthday
 
-| Command         | Arguments | Description |
-| --------------- | --------- | ----------- |
-| add-birthday    |           |             |
-| show-birthday   |           |             |
-| change-birthday |           |             |
-| birthdays       |           |             |
+| Command       | Arguments                           | Description                                   |
+| ------------- | ----------------------------------- | --------------------------------------------- |
+| add-birthday  | add-birthday [name] [birthday date] | add contact's birthday                        |
+| show-birthday | show-birthday [name]                | show concrete contact's birthday              |
+| birthdays     | birthdays [quantity of days]        | show birthdays wihthin pointed period of time |
 
 ### ✉️ Manage by Email
 
-| Command      | Arguments | Description |
-| ------------ | --------- | ----------- |
-| add-email    |           |             |
-| show-email   |           |             |
-| change-email |           |             |
-| delete-email |           |             |
+| Command      | Arguments                   | Description                     |
+| ------------ | --------------------------- | ------------------------------- |
+| add-email    | add-email [name]            | add contact's emails            |
+| show-email   | show-email [name]           | show concrete contact's emails  |
+| delete-email | delete-email [name] [email] | delete contact's concrete email |
 
 ### 📭 Manage by Address
 
-| Command        | Arguments | Description |
-| -------------- | --------- | ----------- |
-| add-address    |           |             |
-| show-address   |           |             |
-| change-address |           |             |
-| delete-address |           |             |
+| Command        | Arguments                     | Description                     |
+| -------------- | ----------------------------- | ------------------------------- | ------------- |
+| add-address    | add-address [name]            | add contact's address           |
+| show-address   | show-address [name]           | show concrete contact's address |
+| delete-address | delete-address [name] [email] | delete contact's address        | НЕРЕАЛІЗОВАНО |
 
 ### 🗒️ Manage by Notes
 
