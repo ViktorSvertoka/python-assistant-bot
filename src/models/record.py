@@ -2,6 +2,8 @@ from models.phone import Phone
 from models.name import Name
 from models.birthday import Birthday
 from models.email import Email
+from models.address import Address
+from utils.colorizer import Colorizer
 
 
 class Record:
@@ -10,16 +12,21 @@ class Record:
         self.phones = []
         self.emails = []
         self.birthday = None
+        self.address = ''
 
     def __str__(self):
         divider_str = "*" * 20
         emails_str = (
-            "Emails: " + "; ".join(e.value for e in self.emails) if self.emails else ""
+            "Emails: " +
+            "; ".join(e.value for e in self.emails) if self.emails else ""
         )
-        birthday_str = f"Birthday: {self.birthday.value}" if self.birthday else ""
+        birthday_str = f"Birthday: {
+            self.birthday.value}" if self.birthday else ""
         phones_str = (
-            "Phones: " + "; ".join(p.value for p in self.phones) if self.phones else ""
+            "Phones: " +
+            "; ".join(p.value for p in self.phones) if self.phones else ""
         )
+        address_str = f"Address: {self.address.value}" if self.address else ""
 
         contact_info = f"""
 {divider_str}
@@ -27,6 +34,7 @@ Contact name: {self.name.value}
 {phones_str}
 {emails_str}
 {birthday_str}
+{address_str}
 {divider_str}
 """
         return contact_info
@@ -35,7 +43,8 @@ Contact name: {self.name.value}
         self.phones.append(Phone(number))
 
     def remove_phone(self, number: str):
-        self.phones = list(filter(lambda phone: phone.value != number, self.phones))
+        self.phones = list(
+            filter(lambda phone: phone.value != number, self.phones))
 
     def edit_phone(self, old_number: str, new_number: str):
         found = False
@@ -47,29 +56,33 @@ Contact name: {self.name.value}
                 break
         if not found:
             raise KeyError(
-                "The specified number does not exist or the contact has no phone numbers."
+                Colorizer.error(
+                    "The specified number does not exist or the contact has no phone numbers.")
             )
-        
-    def edit_email(self, old_email, new_email):
-        for email in self.emails:
-            if email.value == old_email:
-                email.value = new_email
-                return
-        raise ValueError(f"Email '{old_email}' not found in contact.")        
 
     def find_phone(self, phone):
         for p in self.phones:
             if p.value == phone:
                 return phone
-            
-    def delete(self, name):
-        del self.data[name]        
+
+    def delete_contact(self, name):
+        del self.data[name]
+
+    def change_name(self, new_name):
+        self.name = Name(new_name)
 
     def add_birthday(self, date):
         self.birthday = Birthday(date)
 
     def add_email(self, email):
         self.emails.append(Email(email))
+
+    def edit_email(self, old_email, new_email):
+        for email in self.emails:
+            if email.value == old_email:
+                email.value = new_email
+                return
+        raise ValueError(f"Email '{old_email}' not found in contact.")
 
     def delete_email(self, email):
         found_email = False
@@ -85,5 +98,6 @@ Contact name: {self.name.value}
             raise ValueError(
                 "The specified email does not exist or the contact has no email addresses."
             )
-    def change_name(self, new_name):
-        self.name = Name(new_name)
+
+    def add_address(self, address: str):
+        self.address = Address(address)

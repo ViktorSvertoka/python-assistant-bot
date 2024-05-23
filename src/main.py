@@ -1,6 +1,6 @@
 import random
 from prompt_toolkit import PromptSession
-from prompt_toolkit.completion import Completer, Completion, WordCompleter
+from prompt_toolkit.completion import Completer, Completion
 
 from models.address_book import AddressBook
 from models.record import Record
@@ -29,17 +29,24 @@ tip_interval = 5  # tip after every 5 commands
 commands = [
     "hello",
     "exit",
-    "add",
-    "change",
-    "phone",
-    "all",
+    "close",
+    "add-contact",
+    "all-contacts",
+    "change-phone",
+    "find-contact",
+    "delete-contact",
+    "show-phone",
+    "change-phone",
     "add-birthday",
     "show-birthday",
     "birthdays",
     "add-email",
     "show-email",
-    "find-contact",
-    "delete-contact"
+    "change-email",
+    "delete-email",
+    "add-address",
+    "show-address",
+    "delete-address"
 ]
 
 
@@ -73,8 +80,10 @@ def input_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
+        except KeyError as e:
+            return Colorizer.error(str(e))
         except Exception as error:
-            return str(error)
+            return Colorizer.error(str(error))
     return inner
 
 
@@ -113,18 +122,29 @@ def add_contact(args, book: AddressBook):
 
 
 @input_error
-def change_contact(args, book: AddressBook):
+def all_contacts(book: AddressBook):
+    global command_count
+    command_count += 1
+    if not book.data:
+        return Colorizer.warn("No contacts found. You can add some.")
+    if command_count % tip_interval == 0:
+        return str(book) + "\n" + give_tip()
+    return str(book)
+
+
+@input_error
+def change_phone(args, book: AddressBook):
     global command_count
     command_count += 1
 
     if len(args) != 4:
         return Colorizer.error("Invalid number of arguments. Usage: change [name] [field] [old_value] [new_value]")
-    
+
     name, field, old_value, new_value = args
     record = book.find(name)
     if not isinstance(record, Record):
         return not_found_message
-    
+
     field = field.lower()
     if field == "phone":
         try:
@@ -148,7 +168,7 @@ def change_contact(args, book: AddressBook):
             return Colorizer.error(str(e))
     else:
         return Colorizer.error(f"Field '{field}' is not supported. Use 'phone', 'email', 'name', or 'birthday'.")
-                   
+
     if command_count % tip_interval == 0:
         return Colorizer.success(f"{field.capitalize()} changed") + "\n" + give_tip()
     return Colorizer.success(f"{field.capitalize()} changed")
@@ -160,7 +180,7 @@ def show_phone(args, book: AddressBook):
     command_count += 1
 
     if len(args) != 1:
-        return "Invalid number of arguments. Usage: phone [name]"
+        return Colorizer.error("Invalid number of arguments. Usage: show-phone [name]")
     name = args[0]
     record = book.find(name)
     if not isinstance(record, Record):
@@ -176,7 +196,7 @@ def find_contact(args, book: AddressBook):
     command_count += 1
 
     if len(args) < 1:
-        raise InputError("Contact name/email is missing.")
+        return Colorizer.error("Contact name/email is missing.")
 
     value = args[0]
     if command_count % tip_interval == 0:
@@ -194,10 +214,10 @@ def delete_contact(args, book: AddressBook):
 
     name = args[0]
     if name in book:
-        book.delete(name)
+        book.delete_contact(name)
         if command_count % tip_interval == 0:
-            return f"Contact '{name}' successfully deleted" + "\n" + give_tip()
-        return f"Contact '{name}' successfully deleted"
+            return Colorizer.success(f"Contact '{name}' successfully deleted") + "\n" + give_tip()
+        return Colorizer.success(f"Contact '{name}' successfully deleted")
     else:
         raise KeyError(f"No contact with the name '{name}' exists")
 
@@ -280,6 +300,82 @@ def show_email(args, book: AddressBook):
 
 
 @input_error
+def change_email(args, book: AddressBook):
+    global command_count
+    command_count += 1
+
+    if len(args) != 3:
+        return Colorizer.error("Invalid number of arguments. Usage: change-email [name] [old_email] [new_email]")
+    name, old_email, new_email = args
+    record = book.find(name)
+    if not isinstance(record, Record):
+        return not_found_message
+    if old_email not in [e.value for e in record.emails]:
+        return Colorizer.error("Such email does not exist for this contact.")
+    record.edit_email(old_email, new_email)
+    message = Colorizer.success("Email changed.")
+    if command_count % tip_interval == 0:
+        message += "\n" + give_tip()
+    return message
+
+
+def delete_email(args, book: AddressBook):
+    global command_count
+    command_count += 1
+
+    if len(args) != 2:
+        return Colorizer.error("Invalid number of arguments. Usage: delete-email [name] [email]")
+    name, email = args
+    record = book.find(name)
+    if not isinstance(record, Record):
+        return not_found_message
+    if email not in [e.value for e in record.emails]:
+        return Colorizer.error("Email does not exist for this contact.")
+    record.delete_email(email)
+    if command_count % tip_interval == 0:
+        return Colorizer.success("Email deleted.") + "\n" + give_tip()
+    return Colorizer.success("Email deleted.")
+
+
+@input_error
+def add_address(args, book: AddressBook):
+    global command_count
+    command_count += 1
+
+    if len(args) < 2:
+        return Colorizer.error("Invalid number of arguments. Usage: add-address [name] [address]")
+    name = args[0]
+    address = " ".join(args[1:])
+    record = book.find(name)
+    if not isinstance(record, Record):
+        return "Contact not found."
+    record.add_address(address)
+    if command_count % tip_interval == 0:
+        return Colorizer.success("Address added.") + "\n" + give_tip()
+    return Colorizer.success("Address added.")
+
+
+@input_error
+def show_address(args, book: AddressBook):
+    global command_count
+    command_count += 1
+
+    if len(args) != 1:
+        return Colorizer.error("Invalid number of arguments. Usage: show-address [name]")
+    name = args[0]
+    record = book.find(name)
+    if not isinstance(record, Record):
+        return not_found_message
+    if record.address:
+        if command_count % tip_interval == 0:
+            return f"Address: {record.address}" + "\n" + give_tip()
+        return f"Address: {record.address}"
+    if command_count % tip_interval == 0:
+        return "Address not added to this contact." + "\n" + give_tip()
+    return "Address not added to this contact."
+
+
+@input_error
 def add_note(notes: Notes):
     title = input(Colorizer.highlight("Enter a title: "))
     text = input(Colorizer.highlight("Enter a text: "))
@@ -319,7 +415,6 @@ def edit_note(notes: Notes):
         return Colorizer.success(f"Note with title '{title}' successfully edited.")
     else:
         return Colorizer.error(f"Note with title '{title}' not found.")
-    
 
 
 @input_error
@@ -330,7 +425,6 @@ def find_note_by_title(notes: Notes):
         return note
     else:
         return Colorizer.error(f"Note with title '{title}' not found.")
-    
 
 
 @input_error
@@ -341,13 +435,11 @@ def find_note_by_tag(notes: Notes):
         return "\n".join(str(note) for note in notes_with_tag)
     else:
         return Colorizer.error(f"No notes found with tag '{tag}'.")
-    
 
 
 @input_error
 def show_all_notes(notes: Notes):
     return notes.show_all_notes()
-    
 
 
 def parse_input(user_input):
@@ -364,11 +456,12 @@ def main():
     session = PromptSession()
     completer = CommandCompleter()
     print(Colorizer.highlight(
-        "Hello! I'm Lana, your personal assistant bot. Smile! Today is the best day ever!"))
+        "Hello! I'm Lana, your personal assistant bot. Smile!😃 Today is the best day ever!"))
 
     while True:
+        enter_command = "Enter a command: "
         user_input = session.prompt(
-            "Enter a command: ", completer=completer)
+            enter_command, completer=completer)
         command, *args = parse_input(user_input)
 
         match command:
@@ -380,19 +473,18 @@ def main():
             case "close" | "exit":
                 save_data(book)
                 save_notes(notes)
-                print("Good bye!")
+                print(Colorizer.highlight("Good bye!👋"))
                 break
-            case "add":
+            case "add-contact":
                 print(add_contact(args, book))
-            case "change":
-                print(change_contact(args, book))
-            case "phone":
+            case "all-contacts":
+                print(all_contacts(book))
+            case "find-contact":
+                print(find_contact(args, book))
+            case "delete-contact":
+                print(delete_contact(args, book))
+            case "show-phone":
                 print(show_phone(args, book))
-            case "all":
-                command_count += 1
-                print(book)
-                if command_count % tip_interval == 0:
-                    print(give_tip())
             case "add-birthday":
                 print(add_birthday(args, book))
             case "show-birthday":
@@ -409,10 +501,14 @@ def main():
                 print(add_email(args, book))
             case "show-email":
                 print(show_email(args, book))
-            case "find-contact":
-                print(find_contact(args, book))
-            case "delete-contact":
-                print(delete_contact(args, book))
+            case "change-email":
+                print(change_email(args, book))
+            case "delete-email":
+                print(delete_email(args, book))
+            case "add-address":
+                print(add_address(args, book))
+            case "show-address":
+                print(show_address(args, book))
             case "add-note":
                 print(add_note(notes))
             case "delete-note":
