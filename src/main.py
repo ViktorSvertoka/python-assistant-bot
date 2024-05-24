@@ -143,7 +143,7 @@ def all_contacts(book: AddressBook):
         return Colorizer.warn("No contacts found. You can add some.")
     if command_count % tip_interval == 0:
         return str(book) + "\n" + give_tip()
-    return str(book)
+    return book
 
 
 @input_error
@@ -363,41 +363,75 @@ def change_email(args, book: AddressBook):
         message += "\n" + give_tip()
     return message
 
-
+@input_error
 def delete_email(args, book: AddressBook):
     global command_count
     command_count += 1
 
-    if len(args) != 2:
-        return Colorizer.error("Invalid number of arguments. Usage: delete-email [name] [email]")
-    name, email = args
-    record = book.find(name)
-    if not isinstance(record, Record):
-        return not_found_message
-    if email not in [e.value for e in record.emails]:
-        return Colorizer.error("Email does not exist for this contact.")
-    record.delete_email(email)
-    if command_count % tip_interval == 0:
-        return Colorizer.success("Email deleted.") + "\n" + give_tip()
-    return Colorizer.success("Email deleted.")
+    if len(args) == 1:
+        name = args[0]
+        record = book.find(name)
+        if not isinstance(record, Record):
+            return not_found_message
+        if record.emails:
+            record.emails = []
+            if command_count % tip_interval == 0:
+                return Colorizer.success("Emails deleted for this contact.") + "\n" + give_tip()
+            return Colorizer.success("Emails deleted for this contact.")
+        else:
+            return Colorizer.warn("No emails to delete for this contact.")
 
+    elif len(args) == 2:
+        name, email = args
+        record = book.find(name)
+        if not isinstance(record, Record):
+            return not_found_message
+        if email not in [e.value for e in record.emails]:
+            return Colorizer.error("Email does not exist for this contact.")
+        record.delete_email(email)
+        if command_count % tip_interval == 0:
+            return Colorizer.success("Email deleted.") + "\n" + give_tip()
+        return Colorizer.success("Email deleted.")
+
+    else:
+        return Colorizer.error("Invalid number of arguments. Usage: delete-email [name] [email]")
 
 @input_error
 def add_address(args, book: AddressBook):
-    global command_count
-    command_count += 1
-
     if len(args) < 2:
-        return Colorizer.error("Invalid number of arguments. Usage: add-address [name] [address]")
+        return "Invalid number of arguments. Usage: add-address [name] [address]"
+    
     name = args[0]
     address = " ".join(args[1:])
     record = book.find(name)
     if not isinstance(record, Record):
         return "Contact not found."
+    if record.address and record.address == address:
+        return f"Address '{address}' already exists for this contact."
     record.add_address(address)
-    if command_count % tip_interval == 0:
-        return Colorizer.success("Address added.") + "\n" + give_tip()
-    return Colorizer.success("Address added.")
+    return "Address added."
+
+@input_error
+@input_error
+def delete_address(args, book: AddressBook):
+    global command_count
+    command_count += 1
+
+    if len(args) != 1:
+        return Colorizer.error("Invalid number of arguments. Usage: delete-address [name]")
+
+    name = args[0]
+    record = book.find(name)
+    if not isinstance(record, Record):
+        return Colorizer.warn(f"No contact with the name '{name}' exists")
+
+    if record.address:
+        record.delete_address()
+        if command_count % tip_interval == 0:
+            return Colorizer.success("Address deleted.") + "\n" + give_tip()
+        return Colorizer.success("Address deleted.")
+    else:
+        return Colorizer.error("Address not found for this contact.")
 
 
 @input_error
@@ -552,6 +586,8 @@ def main():
                 print(delete_email(args, book))
             case "add-address":
                 print(add_address(args, book))
+            case "delete-address":
+                print(delete_address(args, book))    
             case "show-address":
                 print(show_address(args, book))
             case "add-note":
