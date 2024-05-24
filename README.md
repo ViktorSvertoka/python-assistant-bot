@@ -55,6 +55,8 @@
 | find-note-by-tag   | [tag]                              | Find notes containing a specific tag.                    |
 | show-all-notes     |                                    | Display all notes stored in the system.                  |
 
+`To continue filling out the note, press Enter after each input.`
+
 ## We use the following types of commits:
 
 - Feat(PY) Added new functionality
