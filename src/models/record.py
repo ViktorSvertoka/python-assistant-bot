@@ -17,7 +17,8 @@ class Record:
     def __str__(self):
         divider_str = "*" * 20
         emails_str = (
-            "Emails: " + "; ".join(e.value for e in self.emails) if self.emails else ""
+            "Emails: " +
+            "; ".join(e.value for e in self.emails) if self.emails else ""
         )
         birthday_str = (
             f"Birthday: {self.birthday.value.strftime('%d.%m.%Y')}"
@@ -25,26 +26,29 @@ class Record:
             else ""
         )
         phones_str = (
-            "Phones: " + "; ".join(p.value for p in self.phones) if self.phones else ""
+            "Phones: " +
+            "; ".join(p.value for p in self.phones) if self.phones else ""
         )
         address_str = f"Address: {self.address.value}" if self.address else ""
 
-        contact_info = f"""
-{divider_str}
-Contact name: {self.name.value}
-{phones_str}
-{emails_str}
-{birthday_str}
-{address_str}
-{divider_str}
-"""
+        contact_info_parts = [
+            divider_str,
+            f"Contact name: {self.name.value}",
+            phones_str,
+            emails_str,
+            birthday_str,
+            address_str,
+            divider_str,
+        ]
+        contact_info = "\n".join(part for part in contact_info_parts if part)
         return contact_info
 
     def add_phone(self, number: str):
         self.phones.append(Phone(number))
 
     def remove_phone(self, number: str):
-        self.phones = list(filter(lambda phone: phone.value != number, self.phones))
+        self.phones = list(
+            filter(lambda phone: phone.value != number, self.phones))
 
     def edit_phone(self, old_number: str, new_number: str):
         found = False
