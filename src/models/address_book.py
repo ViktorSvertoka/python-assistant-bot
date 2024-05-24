@@ -50,6 +50,6 @@ Congratulation date: {birthday_str}
 {divider_str}
 """)  
         if not upcoming_birthdays:
-            return "No upcoming birthdays within the next {} days.".format(days_from_today)
+            return f"\nNo upcoming birthdays within the next {days_from_today} days.\n"
     
         return "\n".join(upcoming_birthdays)             
