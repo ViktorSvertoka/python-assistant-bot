@@ -46,7 +46,7 @@ class Notes:
             return f"Note with title: '{title}' not found."
 
 
-    def edit_note(self, title, new_content, new_tags):
+    def change_note(self, title, new_content, new_tags):
         note = self.find_note_by_title(title)
         if note:
             note.content = Content(new_content) if new_content else note.content
@@ -77,5 +77,5 @@ class Notes:
             return "No notes available."
 
         divider_str = "*" * 40
-        notes_str = "\n\n".join(f"{divider_str}\n{note}\n{divider_str}\n\n" for note in self.notes)
+        notes_str = "\n\n".join(f"{divider_str}\n{note}\n{divider_str}" for note in self.notes)
         return notes_str

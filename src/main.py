@@ -46,7 +46,7 @@ commands = [
     "show-address",
     "delete-address",
     "add-note",
-    "edit-note",
+    "change-note",
     "delete-note",
     "find-note-by-title",
     "find-note-by-tag",
@@ -474,13 +474,13 @@ def delete_note(notes: Notes):
     title = input(Colorizer.highlight("Enter a title: "))
     notes.delete_note(title)
     if notes.find_note_by_title(title):
-        return Colorizer.error(f"Note with title: '{title}' not found.")
-    else:
         return Colorizer.success(f"Note with title: '{title}' successfully deleted.")
+    else:
+        return Colorizer.error(f"Note with title: '{title}' not found.")
 
 
 @input_error
-def edit_note(notes: Notes):
+def change_note(notes: Notes):
     title = input(Colorizer.highlight("Enter a title: "))
     new_content = input(Colorizer.highlight("Enter new content: "))
     new_tags = input(Colorizer.highlight("Enter new tags: "))
@@ -516,7 +516,7 @@ def find_note_by_tag(notes: Notes):
     if notes_with_tag:
         return "\n".join(str(note) for note in notes_with_tag)
     else:
-        return Colorizer.warn(f"No notes found with tag '{tag}'.")
+        return Colorizer.error(f"No notes found with tag '{tag}'.")
 
 
 @input_error
@@ -595,7 +595,7 @@ def main():
             case "delete-note":
                 print(delete_note(notes))
             case "change-note":
-                print(edit_note(notes))
+                print(change_note(notes))
             case "find-note-by-title":
                 print(find_note_by_title(notes))
             case "find-note-by-tag":
