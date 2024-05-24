@@ -409,7 +409,7 @@ def add_address(args, book: AddressBook):
     if record.address and record.address == address:
         return f"Address '{address}' already exists for this contact."
     record.add_address(address)
-    return "Address added."
+    return Colorizer.success("Address added.")
 
 @input_error
 @input_error
