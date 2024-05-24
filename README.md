@@ -9,7 +9,7 @@
 | Command        | Arguments                                             | Description                                                    |
 | -------------- | ----------------------------------------------------- | -------------------------------------------------------------- |
 | add-contact    | add-contact [name] [phone]                            | add new contact or update existed with additional phone number |
-| all-contact    | all-contact                                           | show all contacts in the Addressbot                            |
+| all-contacts   | all-contacts                                          | show all contacts in the Addressbot                            |
 | change-contact | change-contact [name] [field] [old_value] [new_value] | change contact's fields such as PHONE, EMAIL, NAME, BIRTHDAY   |
 | find-contact   | find-contact [name]                                   | show concrete contact's fields                                 |
 | delete-contact | delete-contact [name]                                 | delete concrete contact from the Addressbot                    |
