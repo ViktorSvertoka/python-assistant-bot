@@ -12,7 +12,7 @@ class Record:
         self.phones = []
         self.emails = []
         self.birthday = None
-        self.address = ""
+        self.address = None
 
     def __str__(self):
         divider_str = "*" * 20
@@ -29,7 +29,7 @@ class Record:
             "Phones: " +
             "; ".join(p.value for p in self.phones) if self.phones else ""
         )
-        address_str = f"Address: {self.address.value}" if self.address else ""
+        address_str = f"Address: {self.address.value}" if isinstance(self.address, Address) else ""
 
         contact_info_parts = [
             divider_str,
@@ -104,5 +104,8 @@ class Record:
                 "The specified email does not exist or the contact has no email addresses."
             )
 
-    def add_address(self, address: str):
+    def add_address(self, address):
         self.address = Address(address)
+
+    def delete_address(self):
+        self.address = None
