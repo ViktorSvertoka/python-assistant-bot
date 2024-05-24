@@ -472,9 +472,13 @@ def add_note(notes: Notes):
 @input_error
 def delete_note(notes: Notes):
     title = input(Colorizer.highlight("Enter a title: "))
-    notes.delete_note(title)
-    if notes.find_note_by_title(title):
-        return Colorizer.success(f"Note with title: '{title}' successfully deleted.")
+    note = notes.find_note_by_title(title)
+    if note:
+        notes.notes.remove(note)
+        if notes.find_note_by_title(title):
+            return Colorizer.error(f"Note with title: '{title}' not found.")
+        else:
+            return Colorizer.success(f"Note with title: '{title}' successfully deleted.")
     else:
         return Colorizer.error(f"Note with title: '{title}' not found.")
 
