@@ -53,7 +53,7 @@ Congratulation date 🎂: {birthday_str}
                     )
         if not upcoming_birthdays:
             return Colorizer.warn(
-                "No upcoming birthdays within the next {} days.".format(days_from_today)
+                f"No upcoming birthdays within the next {days_from_today} days."
             )
 
         return "\n".join(upcoming_birthdays)

@@ -273,6 +273,22 @@ def show_birthday(args, book: AddressBook):
     return Colorizer.warn("Birthday not added to this contact.")
 
 
+
+@input_error
+def birthdays(args, book: AddressBook):
+    global command_count
+    command_count += 1
+
+    if len(args) != 1 or not args[0].isdigit():
+        return Colorizer.error("Invalid arguments. Usage: birthdays [the number of days from today's date]")
+    days_from_today = int(args[0])
+    upcoming_birthdays = book.get_upcoming_birthdays(days_from_today)
+    
+    if command_count % tip_interval == 0:
+        return upcoming_birthdays + "\n" + give_tip() 
+    return upcoming_birthdays
+
+
 @input_error
 def add_email(args, book: AddressBook):
     global command_count
@@ -509,13 +525,7 @@ def main():
             case "show-birthday":
                 print(show_birthday(args, book))
             case "birthdays":
-                command_count += 1
-                days_from_today = int(args[0])
-                upcoming_birthdays = book.get_upcoming_birthdays(
-                    days_from_today)
-                print(upcoming_birthdays)
-                if command_count % tip_interval == 0:
-                    print(give_tip())
+                print(birthdays(args, book))
             case "add-email":
                 print(add_email(args, book))
             case "show-email":
