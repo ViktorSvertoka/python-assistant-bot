@@ -46,7 +46,13 @@ commands = [
     "delete-email",
     "add-address",
     "show-address",
-    "delete-address"
+    "delete-address",
+    "add-note",
+    "delete-note",
+    "edit-note",
+    "find-note-by-title",
+    "find-note-by-tag",
+    "show-all-notes"
 ]
 
 
