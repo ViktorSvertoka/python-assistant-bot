@@ -39,10 +39,10 @@
 ### 📭 Manage by Address
 
 | Command        | Arguments                     | Description                     |
-| -------------- | ----------------------------- | ------------------------------- | ------------- |
+| -------------- | ----------------------------- | ------------------------------- |
 | add-address    | add-address [name]            | add contact's address           |
 | show-address   | show-address [name]           | show concrete contact's address |
-| delete-address | delete-address [name] [email] | delete contact's address        | НЕРЕАЛІЗОВАНО |
+| delete-address | delete-address [name] [email] | delete contact's address        |
 
 ### 🗒️ Manage by Notes
 
