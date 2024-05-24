@@ -506,9 +506,12 @@ def main():
         "Hello! I'm Lana, your personal assistant bot. Smile!😃 Today is the best day ever!"))
 
     while True:
-        enter_command = "Enter a command: "
         user_input = session.prompt(
-            enter_command, completer=completer)
+            "Enter a command: ", completer=completer)
+        if not user_input.strip():
+            print(Colorizer.warn("Please enter a command."))
+            continue
+        
         command, *args = parse_input(user_input)
 
         match command:
