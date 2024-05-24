@@ -15,7 +15,7 @@ class Record:
         self.address = None
 
     def __str__(self):
-        divider_str = "*" * 20
+        divider_str = "*" * 40
         emails_str = (
             "Emails: " +
             "; ".join(e.value for e in self.emails) if self.emails else ""
@@ -29,7 +29,8 @@ class Record:
             "Phones: " +
             "; ".join(p.value for p in self.phones) if self.phones else ""
         )
-        address_str = f"Address: {self.address.value}" if isinstance(self.address, Address) else ""
+        address_str = f"Address: {self.address.value}" if isinstance(
+            self.address, Address) else ""
 
         contact_info_parts = [
             divider_str,
