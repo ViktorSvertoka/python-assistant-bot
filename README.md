@@ -9,10 +9,10 @@
 | Command        | Arguments                                             | Description                                                    |
 | -------------- | ----------------------------------------------------- | -------------------------------------------------------------- |
 | add-contact    | add-contact [name] [phone]                            | add new contact or update existed with additional phone number |
-| all-contacts   | all-contacts                                          | show all contacts in the Addressbot                            |
+| all-contacts   | all-contacts                                          | show all contacts in the Address bot                           |
 | change-contact | change-contact [name] [field] [old_value] [new_value] | change contact's fields such as PHONE, EMAIL, NAME, BIRTHDAY   |
 | find-contact   | find-contact [name]                                   | show concrete contact's fields                                 |
-| delete-contact | delete-contact [name]                                 | delete concrete contact from the Addressbot                    |
+| delete-contact | delete-contact [name]                                 | delete concrete contact from the Address bot                   |
 
 ### ☎️ Manage by Phone
 
@@ -22,27 +22,27 @@
 
 ### 🎂 Manage by Birthday
 
-| Command       | Arguments                           | Description                                   |
-| ------------- | ----------------------------------- | --------------------------------------------- |
-| add-birthday  | add-birthday [name] [birthday date] | add contact's birthday                        |
-| show-birthday | show-birthday [name]                | show concrete contact's birthday              |
-| birthdays     | birthdays [quantity of days]        | show birthdays wihthin pointed period of time |
+| Command       | Arguments                           | Description                                  |
+| ------------- | ----------------------------------- | -------------------------------------------- |
+| add-birthday  | add-birthday [name] [birthday date] | add contact's birthday                       |
+| show-birthday | show-birthday [name]                | show concrete contact's birthday             |
+| birthdays     | birthdays [quantity of days]        | show birthdays within pointed period of time |
 
 ### ✉️ Manage by Email
 
 | Command      | Arguments                   | Description                     |
 | ------------ | --------------------------- | ------------------------------- |
-| add-email    | add-email [name]            | add contact's emails            |
+| add-email    | add-email [name] [email]    | add contact's emails            |
 | show-email   | show-email [name]           | show concrete contact's emails  |
 | delete-email | delete-email [name] [email] | delete contact's concrete email |
 
 ### 📭 Manage by Address
 
-| Command        | Arguments                     | Description                     |
-| -------------- | ----------------------------- | ------------------------------- |
-| add-address    | add-address [name]            | add contact's address           |
-| show-address   | show-address [name]           | show concrete contact's address |
-| delete-address | delete-address [name] [email] | delete contact's address        |
+| Command        | Arguments                       | Description                     |
+| -------------- | ------------------------------- | ------------------------------- |
+| add-address    | add-address [name] [address]    | add contact's address           |
+| show-address   | show-address [name]             | show concrete contact's address |
+| delete-address | delete-address [name] [address] | delete contact's address        |
 
 ### 🗒️ Manage by Notes
 
