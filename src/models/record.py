@@ -12,19 +12,20 @@ class Record:
         self.phones = []
         self.emails = []
         self.birthday = None
-        self.address = ''
+        self.address = ""
 
     def __str__(self):
         divider_str = "*" * 20
         emails_str = (
-            "Emails: " +
-            "; ".join(e.value for e in self.emails) if self.emails else ""
+            "Emails: " + "; ".join(e.value for e in self.emails) if self.emails else ""
         )
-        birthday_str = f"Birthday: {
-            self.birthday.value.strftime('%d.%m.%Y')}" if self.birthday else ""
+        birthday_str = (
+            f"Birthday: {self.birthday.value.strftime('%d.%m.%Y')}"
+            if self.birthday
+            else ""
+        )
         phones_str = (
-            "Phones: " +
-            "; ".join(p.value for p in self.phones) if self.phones else ""
+            "Phones: " + "; ".join(p.value for p in self.phones) if self.phones else ""
         )
         address_str = f"Address: {self.address.value}" if self.address else ""
 
@@ -43,8 +44,7 @@ Contact name: {self.name.value}
         self.phones.append(Phone(number))
 
     def remove_phone(self, number: str):
-        self.phones = list(
-            filter(lambda phone: phone.value != number, self.phones))
+        self.phones = list(filter(lambda phone: phone.value != number, self.phones))
 
     def edit_phone(self, old_number: str, new_number: str):
         found = False
@@ -57,7 +57,8 @@ Contact name: {self.name.value}
         if not found:
             raise KeyError(
                 Colorizer.error(
-                    "The specified number does not exist or the contact has no phone numbers.")
+                    "The specified number does not exist or the contact has no phone numbers."
+                )
             )
 
     def find_phone(self, phone):

@@ -17,8 +17,7 @@ class AddressBook(UserDict):
 
     def add_record(self, record):
         if record.name.value in self.data:
-            raise KeyError(f"Record with name '{
-                           record.name.value}' already exists.")
+            raise KeyError(f"Record with name '{record.name.value}' already exists.")
         self.data[record.name.value] = record
 
     def find(self, value: str):
@@ -44,13 +43,17 @@ class AddressBook(UserDict):
 
                 if 0 <= timedelta_days <= days_from_today:
                     birthday_str = birthday_date.strftime(DATE_FORMAT)
-                    upcoming_birthdays.append(f"""
+                    upcoming_birthdays.append(
+                        f"""
 {divider_str}
 Name: {name},
 Congratulation date 🎂: {birthday_str}
 {divider_str}
-""")
+"""
+                    )
         if not upcoming_birthdays:
-            return Colorizer.warn("No upcoming birthdays within the next {} days.".format(days_from_today))
+            return Colorizer.warn(
+                "No upcoming birthdays within the next {} days.".format(days_from_today)
+            )
 
         return "\n".join(upcoming_birthdays)
