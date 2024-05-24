@@ -63,18 +63,28 @@ class CommandCompleter(Completer):
         text = document.text_before_cursor
         buffer = text.split()
 
-        if not buffer:  # If buffer is empty
+        if not buffer:
             options = commands[:]  # Show all commands
         else:
             cmd = buffer[0]  # Get the command typed so far
-            if cmd == 'find-contact' and len(buffer) == 2:
+
+            if cmd == 'change-contact':
+                if len(buffer) == 2:  # Suggest contact names
+                    contact_names = get_contact_names(book)
+                    options = [
+                        name for name in contact_names if name.startswith(buffer[1])]
+                elif len(buffer) == 3:  # Suggest field options
+                    options = ['phone', 'email', 'name', 'birthday']
+                else:
+                    options = []
+            elif cmd in {'find-contact', 'show-address', 'delete-contact', 'show-phone', 'add_birthday', 'show-birthday', 'add-email', 'show-email', 'delete-email', 'add-address', 'delete-address'} and len(buffer) == 2:
                 contact_names = get_contact_names(book)
                 options = [
                     name for name in contact_names if name.startswith(buffer[1])]
             else:
                 # Show commands that start with the typed text
                 options = [
-                    command for command in commands if command.startswith(cmd)]
+                    command for command in commands if command.startswith(buffer[-1])]
 
         for option in options:
             yield Completion(option, start_position=-len(buffer[-1]))
@@ -239,15 +249,22 @@ def add_birthday(args, book: AddressBook):
     command_count += 1
 
     if len(args) != 2:
-        return Colorizer.error("Invalid number of arguments. Usage: add-birthday [name] [date]")
+        return Colorizer.error("Invalid number of arguments. Usage: add-birthday [name] [DD.MM.YYYY]")
     name, date = args
     record = book.find(name)
     if not isinstance(record, Record):
         return not_found_message
-    record.add_birthday(date)
-    if command_count % tip_interval == 0:
-        return Colorizer.success("Birthday added.") + "\n" + give_tip()
-    return Colorizer.success("Birthday added.")
+
+    if record.birthday:
+        return Colorizer.error("Birthday already exists for this contact. Use 'change-birthday' to modify it.")
+
+    try:
+        record.add_birthday(date)
+        if command_count % tip_interval == 0:
+            return Colorizer.success("Birthday added.") + "\n" + give_tip()
+        return Colorizer.success("Birthday added.")
+    except ValueError as e:
+        return Colorizer.error(str(e))
 
 
 @input_error
@@ -272,7 +289,6 @@ def show_birthday(args, book: AddressBook):
     return Colorizer.warn("Birthday not added to this contact.")
 
 
-
 @input_error
 def birthdays(args, book: AddressBook):
     global command_count
@@ -282,9 +298,9 @@ def birthdays(args, book: AddressBook):
         return Colorizer.error("Invalid arguments. Usage: birthdays [the number of days from today's date]")
     days_from_today = int(args[0])
     upcoming_birthdays = book.get_upcoming_birthdays(days_from_today)
-    
+
     if command_count % tip_interval == 0:
-        return upcoming_birthdays + "\n" + give_tip() 
+        return upcoming_birthdays + "\n" + give_tip()
     return upcoming_birthdays
 
 
@@ -483,7 +499,7 @@ def parse_input(user_input):
 def main():
     global command_count
     global book
-    book,notes = load_data()
+    book, notes = load_data()
     session = PromptSession()
     completer = CommandCompleter()
     print(Colorizer.highlight(
