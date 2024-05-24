@@ -6,7 +6,6 @@ from models.address_book import AddressBook
 from models.record import Record
 from models.notes import Notes
 from utils.storage import save_data, load_data
-from utils.storage_notes import save_notes, load_notes
 from utils.colorizer import Colorizer
 
 not_found_message = "Contact does not exist, you can add it"
@@ -484,8 +483,7 @@ def parse_input(user_input):
 def main():
     global command_count
     global book
-    book = load_data()
-    notes = load_notes()
+    book,notes = load_data()
     session = PromptSession()
     completer = CommandCompleter()
     print(Colorizer.highlight(
@@ -504,8 +502,7 @@ def main():
                 if command_count % tip_interval == 0:
                     print(give_tip())
             case "close" | "exit":
-                save_data(book)
-                save_notes(notes)
+                save_data(book, notes)
                 print(Colorizer.highlight("Good bye!👋"))
                 break
             case "add-contact":
