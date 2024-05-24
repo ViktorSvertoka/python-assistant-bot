@@ -143,7 +143,7 @@ def change_contact(args, book: AddressBook):
     command_count += 1
 
     if len(args) != 4:
-        return Colorizer.error("Invalid number of arguments. Usage: change [name] [field] [old_value] [new_value]")
+        return Colorizer.error("Invalid number of arguments. Usage: change-contact [name] [field] [old_value] [new_value]")
 
     name, field, old_value, new_value = args
     record = book.find(name)
@@ -226,12 +226,12 @@ def delete_contact(args, book: AddressBook):
     name = args[0]
     record = book.find(name)
     if record:
-        book.delete(name)
+        book.delete_contact(name)
         if command_count % tip_interval == 0:
-            return f"Contact '{name}' successfully deleted" + "\n" + give_tip()
-        return f"Contact '{name}' successfully deleted"
+            return Colorizer.success(f"Contact '{name}' successfully deleted") + "\n" + give_tip()
+        return Colorizer.success(f"Contact '{name}' successfully deleted")
     else:
-        return f"No contact with the name '{name}' exists"
+        return Colorizer.warn(f"No contact with the name '{name}' exists")
 
 
 @input_error
