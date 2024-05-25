@@ -9,6 +9,6 @@ setup(
     license="MIT",
     packages=find_namespace_packages(where="src"),
     package_dir={"": "src"},
-    install_requires=["colorama", "prompt_toolkit"],
+    install_requires=["colorama", "prompt_toolkit", "tabulate"],
     entry_points={"console_scripts": ["hi-lana=main:main"]},
 )
