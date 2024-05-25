@@ -53,7 +53,8 @@ commands = [
     "delete-note",
     "find-note-by-title",
     "find-note-by-tag",
-    "show-all-notes"
+    "show-all-notes",
+    "play-game"
 ]
 
 
@@ -544,6 +545,67 @@ def find_note_by_tag(notes: Notes):
 def show_all_notes(notes: Notes):
     return notes.show_all_notes()
 
+def guess_number():
+    number = random.randint(1, 100)
+    attempts = 0
+    print(Colorizer.highlight("Вгадай число від 1 до 100."))
+    while True:
+        guess = input("Введіть ваше число: ")
+        attempts += 1
+        if guess.isdigit():
+            guess = int(guess)
+            if guess < number:
+                print(Colorizer.info("Загадане число більше."))
+            elif guess > number:
+                print(Colorizer.info("Загадане число менше."))
+            else:
+                print(Colorizer.success(f"Вітаємо! Ви вгадали число {number} за {attempts} спроб(и)."))
+                break
+        else:
+            print(Colorizer.error("Будь ласка, введіть коректне число."))
+
+def tic_tac_toe():
+    board = [" " for _ in range(9)]
+    
+    def print_board():
+        print("---------")
+        for i in range(3):
+            print("|" + "|".join(board[i*3:i*3+3]) + "|")
+        print("---------")
+
+    def check_winner(board, player):
+        win_conditions = [
+            [board[0], board[1], board[2]],
+            [board[3], board[4], board[5]],
+            [board[6], board[7], board[8]],
+            [board[0], board[3], board[6]],
+            [board[1], board[4], board[7]],
+            [board[2], board[5], board[8]],
+            [board[0], board[4], board[8]],
+            [board[2], board[4], board[6]]
+        ]
+        return [player, player, player] in win_conditions
+
+    def tic_tac_toe_game():
+        current_player = "X"
+        print_board()
+        for turn in range(9):
+            while True:
+                move = input(Colorizer.error(f"Гравець {current_player}, введіть позицію (1-9): "))
+                if move.isdigit() and 1 <= int(move) <= 9 and board[int(move)-1] == " ":
+                    board[int(move)-1] = current_player
+                    break
+                else:
+                    print(Colorizer.warn("Некоректний хід. Спробуйте ще раз."))
+            print_board()
+            if check_winner(board, current_player):
+                print(Colorizer.success(f"Гравець {current_player} переміг!"))
+                return
+            current_player = "O" if current_player == "X" else "X"
+        print(Colorizer.info("Нічия!"))
+
+    tic_tac_toe_game()
+
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -627,6 +689,8 @@ def main():
                 print(find_note_by_tag(notes))
             case "show-all-notes":
                 print(show_all_notes(notes))
+            case "play-game":
+                play_game()    
             case _:
                 command_count += 1
                 print(Colorizer.error(
@@ -634,6 +698,21 @@ def main():
                 if command_count % tip_interval == 0:
                     print(give_tip())
 
+def play_game():
+    print(Colorizer.highlight("Вітаємо в Міні-ігри!"))
+    print(Colorizer.info("Доступні ігри: 'Вгадай число', 'Тік-Так-Тоу'."))
+
+    while True:
+        user_input = input(Colorizer.error("\nОберіть гру (введіть 'вгадай число', 'тік-тик-тоу', або 'вихід' для завершення): ")).lower()
+        if user_input == "вихід":
+            print(Colorizer.highlight("До побачення!"))
+            break
+        elif user_input == "вгадай число":
+            guess_number()
+        elif user_input == "тік-тик-тоу":
+            tic_tac_toe()
+        else:
+            print(Colorizer.error("Невідома команда. Спробуйте ще раз."))
 
 if __name__ == "__main__":
     main()
