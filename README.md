@@ -94,3 +94,5 @@ Choose from the list the description of the commit that fits your task, in brack
 ### Project result
 
 ![Results](./src/screen.png)
+
+![Results](./src/screen2.png)
