@@ -1,4 +1,5 @@
 import random
+from tabulate import tabulate
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import Completer, Completion
 
@@ -7,6 +8,7 @@ from models.record import Record
 from models.notes import Notes
 from utils.storage import save_data, load_data
 from utils.colorizer import Colorizer
+from utils.help import commands_description
 
 not_found_message = "Contact does not exist, you can add it"
 
@@ -29,6 +31,7 @@ commands = [
     "hello",
     "exit",
     "close",
+    "help",
     "add-contact",
     "all-contacts",
     "change-contact",
@@ -77,7 +80,7 @@ class CommandCompleter(Completer):
                     options = ['phone', 'email', 'name', 'birthday']
                 else:
                     options = []
-            elif cmd in {'find-contact', 'show-address', 'delete-contact', 'show-phone', 'add_birthday', 'show-birthday', 'add-email', 'show-email', 'delete-email', 'add-address', 'delete-address'} and len(buffer) == 2:
+            elif cmd in {'find-contact', 'show-address', 'delete-contact', 'show-phone', 'add-birthday', 'show-birthday', 'add-email', 'show-email', 'delete-email', 'add-address', 'delete-address'} and len(buffer) == 2:
                 contact_names = get_contact_names(book)
                 options = [
                     name for name in contact_names if name.startswith(buffer[1])]
@@ -109,6 +112,11 @@ def complete(text, state):
     contacts = [record.name.value for record in book.data.values()]
     matches = [c for c in contacts if c.startswith(text)]
     return matches[state] if state < len(matches) else None
+
+
+def show_help():
+    print(tabulate(commands_description, headers=[
+          "Command", "Arguments", "Description"], tablefmt="grid"))
 
 
 @input_error
@@ -363,6 +371,7 @@ def change_email(args, book: AddressBook):
         message += "\n" + give_tip()
     return message
 
+
 @input_error
 def delete_email(args, book: AddressBook):
     global command_count
@@ -396,22 +405,30 @@ def delete_email(args, book: AddressBook):
     else:
         return Colorizer.error("Invalid number of arguments. Usage: delete-email [name] [email]")
 
+
 @input_error
 def add_address(args, book: AddressBook):
+    global command_count
+    command_count += 1
+
     if len(args) < 2:
-        return "Invalid number of arguments. Usage: add-address [name] [address]"
-    
+        return Colorizer.error("Invalid number of arguments. Usage: add-address [name] [address]")
     name = args[0]
     address = " ".join(args[1:])
     record = book.find(name)
     if not isinstance(record, Record):
-        return "Contact not found."
-    if record.address and record.address == address:
-        return f"Address '{address}' already exists for this contact."
-    record.add_address(address)
-    return Colorizer.success("Address added.")
+        return Colorizer.warn("Contact not found.")
+    try:
+        record.add_address(address)
+    except ValueError as e:
+        return Colorizer.warn(str(e))
 
-@input_error
+    success_message = Colorizer.success("Address added.")
+    if command_count % tip_interval == 0:
+        success_message += "\n" + give_tip()
+    return success_message
+
+
 @input_error
 def delete_address(args, book: AddressBook):
     global command_count
@@ -547,21 +564,25 @@ def main():
         user_input = session.prompt(
             "Enter a command: ", completer=completer)
         if not user_input.strip():
-            print(Colorizer.warn("Please enter a command."))
+            print(Colorizer.warn(
+                "No command entered. Type 'help' for a list of commands."))
             continue
-        
+
         command, *args = parse_input(user_input)
 
         match command:
             case "hello":
                 command_count += 1
-                print("How can I help you?")
+                print(Colorizer.highlight(
+                    "How can I help you? To see the list of commands type 'help'."))
                 if command_count % tip_interval == 0:
                     print(give_tip())
             case "close" | "exit":
                 save_data(book, notes)
                 print(Colorizer.highlight("Good bye!👋"))
                 break
+            case "help":
+                show_help()
             case "add-contact":
                 print(add_contact(args, book))
             case "all-contacts":
@@ -591,7 +612,7 @@ def main():
             case "add-address":
                 print(add_address(args, book))
             case "delete-address":
-                print(delete_address(args, book))    
+                print(delete_address(args, book))
             case "show-address":
                 print(show_address(args, book))
             case "add-note":
@@ -608,7 +629,8 @@ def main():
                 print(show_all_notes(notes))
             case _:
                 command_count += 1
-                print("Invalid command.")
+                print(Colorizer.error(
+                    "Unknown command. Type 'help' for a list of commands."))
                 if command_count % tip_interval == 0:
                     print(give_tip())
 

@@ -88,7 +88,8 @@ class Record:
             if email.value == old_email:
                 email.value = new_email
                 return
-        raise ValueError(f"Email '{old_email}' not found in contact.")
+        raise ValueError(Colorizer.error(
+            f"Email '{old_email}' not found in contact."))
 
     def delete_email(self, email):
         found_email = False
@@ -102,11 +103,16 @@ class Record:
             self.emails.remove(email_to_delete)
         else:
             raise ValueError(
-                "The specified email does not exist or the contact has no email addresses."
+                Colorizer.error(
+                    "The specified email does not exist or the contact has no email addresses.")
             )
 
-    def add_address(self, address):
-        self.address = Address(address)
+    def add_address(self, address: str):
+        if self.address is None or not isinstance(self.address, Address):
+            self.address = Address(address)
+        else:
+            raise ValueError(Colorizer.error(
+                "Address already exists for this contact."))
 
     def delete_address(self):
         self.address = None

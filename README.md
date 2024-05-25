@@ -5,11 +5,20 @@
 1. `pip install setuptools`
 2. `pip install prompt_toolkit`
 3. `pip install colorama`
-4. `pip install -e .`
+4. `pip install tabulate`
+5. `pip install -e .`
 
 ## Start bot command: hi-lana
 
 ## 📴 Commands list:
+
+### 🔅 General commands
+
+| Command       | Arguments    | Description                        |
+| ------------- | ------------ | ---------------------------------- |
+| hello         | no arguments | greet the Lana Bot                 |
+| help          | no arguments | show all commands with description |
+| close or exit | no arguments | stop the Lana Bot                  |
 
 ### 🙍 Manage by Contacts
 
