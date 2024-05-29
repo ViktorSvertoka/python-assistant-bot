@@ -96,3 +96,20 @@ Choose from the list the description of the commit that fits your task, in brack
 ![Results](./src/screen.png)
 
 ![Results](./src/screen2.png)
+
+### Development team :
+
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ViktorSvertoka)
+Viktor Svertoka **Team Lead**
+
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yevheniidatsenko)
+Yevhenii Datsenko **Scrum Master**
+
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LesiaUKR)
+Lesia Soloviova **Front End Developer**
+
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/AlinaRyabova)
+Alina Riabova **Front End Developer**
+
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/YNazymko12)
+Yuliia Nazymko **Front End Developer**
