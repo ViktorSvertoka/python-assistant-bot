@@ -106,10 +106,10 @@ Viktor Svertoka **Team Lead**
 Yevhenii Datsenko **Scrum Master**
 
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LesiaUKR)
-Lesia Soloviova **Front End Developer**
+Lesia Soloviova **Developer**
 
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/AlinaRyabova)
-Alina Riabova **Front End Developer**
+Alina Riabova **Developer**
 
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/YNazymko12)
-Yuliia Nazymko **Front End Developer**
+Yuliia Nazymko **Developer**
