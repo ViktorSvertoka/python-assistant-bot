@@ -1,5 +1,7 @@
 # Personal Assistant Bot Lana
 
+![Results](./assets/lana.jpg)
+
 ## To run the bot, please install the following packages:
 
 1. `pip install setuptools`
