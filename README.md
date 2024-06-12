@@ -95,9 +95,9 @@ Choose from the list the description of the commit that fits your task, in brack
 
 ### Project result
 
-![Results](./src/screen.png)
+![Results](./assets/screen_01.png)
 
-![Results](./src/screen2.png)
+![Results](./assets/screen_02.png)
 
 ### Development team :
 
